@@ -8,7 +8,7 @@ module TsvBuddy
   def take_tsv(tsv)
     rows = tsv.lines.map(&:chomp)
     header = rows[0].chomp.split("\t")
-    @data = rows[1..-1].map do |line|
+    @data = rows[1..].map do |line|
       values = line.chomp.split("\t")
       header.zip(values).to_h
     end
@@ -20,6 +20,6 @@ module TsvBuddy
   def to_tsv
     header = @data.first.keys.join("\t")
     rows = @data.map { |row| row.values.join("\t") }
-    rows.insert(0, header).join("\n") + "\n"
+    rows.insert(0, header).reduce('') { |acc, element| "#{acc}#{element}\n" }
   end
 end
